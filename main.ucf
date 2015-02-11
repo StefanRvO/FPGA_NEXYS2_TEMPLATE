@@ -1,0 +1,20 @@
+
+NET "SW<0>" LOC = "g18";
+NET "SW<1>" LOC = "h18";
+NET "SW<2>" LOC = "k18";
+NET "SW<3>" LOC = "k17";
+
+NET "DP<0>" LOC = "l18";
+NET "DP<1>" LOC = "f18";
+NET "DP<2>" LOC = "d17";
+NET "DP<3>" LOC = "d16";
+NET "DP<4>" LOC = "g14";
+NET "DP<5>" LOC = "j17";
+NET "DP<6>" LOC = "h14";
+
+NET "AN<0>" LOC = "f17";
+NET "AN<1>" LOC = "h17";
+NET "AN<2>" LOC = "c18";
+NET "AN<3>" LOC = "f15";
+
+NET "CLOCK" LOC = "b8";
