@@ -79,20 +79,40 @@ export XST_FILE_OPTIONS
 
 
 all: $(PROGRAM).xst
-	mkdir xst
-	mkdir xst/projnav.tmp
 	$(XST) -intstyle ise -ifn $(PROGRAM).xst -ofn $(PROGRAM).syr
 	$(NGDBUILD) -p $(PART) -uc $(PROGRAM).ucf $(PROGRAM).ngc
 	$(MAP) -detail -pr b $(PROGRAM).ngd
 	$(PAR) -w $(PROGRAM).ncd parout.ncd $(PROGRAM).pcf
-	$(BITGEN) -w -g StartUpClk:JtagClk -g CRC:Enable parout.ncd $(PROGRAM).bit $(PROGRAM).pcf
+	$(BITGEN) -w -g StartUpClk:CCLK -g CRC:Enable parout.ncd $(PROGRAM).bit $(PROGRAM).pcf
 
 
 $(PROGRAM).xst:
 	echo "$$XST_FILE_OPTIONS" > $(PROGRAM).xst
+	mkdir -p xst
+	mkdir -p xst/projnav.tmp
 
-program:
+$(PROGRAM).ngc: $(PROGRAM).xst
+	mkdir -p xst
+	mkdir -p xst/projnav.tmp
+	$(XST) -intstyle ise -ifn $(PROGRAM).xst -ofn $(PROGRAM).syr
+
+$(PROGRAM).ngd: $(PROGRAM).ngc
+	$(NGDBUILD) -p $(PART) -uc $(PROGRAM).ucf $(PROGRAM).ngc
+
+$(PROGRAM).ncd: $(PROGRAM).ngd
+	$(MAP) -detail -pr b $(PROGRAM).ngd
+
+parout.ncd: $(PROGRAM).ncd
+	$(PAR) -w $(PROGRAM).ncd parout.ncd $(PROGRAM).pcf
+
+$(PROGRAM).bit: parout.ncd
+	$(BITGEN) -w -g StartUpClk:CCLK -g CRC:Enable parout.ncd $(PROGRAM).bit $(PROGRAM).pcf
+
+program: $(PROGRAM).bit
 	sudo djtgcfg -d DOnbUsb prog -i 0 -f $(PROGRAM).bit
+
+flash: $(PROGRAM).bit
+	sudo djtgcfg -d DOnbUsb prog -i 1 -f $(PROGRAM).bit
 
 clean:
 	rm -rf xst
