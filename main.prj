@@ -1,3 +1,5 @@
 vhdl work "T_Flip_Flop.vhd"
+vhdl work "Prescaler.vhd"
 vhdl work "Memory.vhd"
+vhdl work "Adder.vhd"
 vhdl work "main.vhd"

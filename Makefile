@@ -78,12 +78,7 @@ endef
 export XST_FILE_OPTIONS
 
 
-all: $(PROGRAM).xst
-	$(XST) -intstyle ise -ifn $(PROGRAM).xst -ofn $(PROGRAM).syr
-	$(NGDBUILD) -p $(PART) -uc $(PROGRAM).ucf $(PROGRAM).ngc
-	$(MAP) -detail -pr b $(PROGRAM).ngd
-	$(PAR) -w $(PROGRAM).ncd parout.ncd $(PROGRAM).pcf
-	$(BITGEN) -w -g StartUpClk:CCLK -g CRC:Enable parout.ncd $(PROGRAM).bit $(PROGRAM).pcf
+all: $(PROGRAM)_PROGRAM.bit
 
 
 $(PROGRAM).xst:
@@ -105,14 +100,17 @@ $(PROGRAM).ncd: $(PROGRAM).ngd
 parout.ncd: $(PROGRAM).ncd
 	$(PAR) -w $(PROGRAM).ncd parout.ncd $(PROGRAM).pcf
 
-$(PROGRAM).bit: parout.ncd
-	$(BITGEN) -w -g StartUpClk:CCLK -g CRC:Enable parout.ncd $(PROGRAM).bit $(PROGRAM).pcf
+$(PROGRAM)_FLASH.bit: parout.ncd
+	$(BITGEN) -w -g StartUpClk:CCLK -g CRC:Enable parout.ncd $(PROGRAM)_FLASH.bit $(PROGRAM).pcf
 
-program: $(PROGRAM).bit
-	sudo djtgcfg -d DOnbUsb prog -i 0 -f $(PROGRAM).bit
+$(PROGRAM)_PROGRAM.bit: parout.ncd
+	$(BITGEN) -w -g StartUpClk:JTAGCLK -g CRC:Enable parout.ncd $(PROGRAM)_PROGRAM.bit $(PROGRAM).pcf
+	
+program: $(PROGRAM)_PROGRAM.bit
+	sudo djtgcfg -d DOnbUsb prog -i 0 -f $(PROGRAM)_PROGRAM.bit
 
-flash: $(PROGRAM).bit
-	sudo djtgcfg -d DOnbUsb prog -i 1 -f $(PROGRAM).bit
+flash: $(PROGRAM)_FLASH.bit
+	sudo djtgcfg -d DOnbUsb prog -i 1 -f $(PROGRAM)_FLASH.bit
 
 clean:
 	rm -rf xst
@@ -138,9 +136,9 @@ clean:
 	rm -f *.unroutes
 	rm -f *.xml
 	rm -rf xlnx_auto_0_xdb
-	rm $(PROGRAM).xst
-	rm $(PROGRAM).lso
-	rm  *.xwbt
+	rm -f $(PROGRAM).xst
+	rm -f $(PROGRAM).lso
+	rm -f *.xwbt
 	rm -f *.log
 	rm -f *.html
 	rm -f *.syr
