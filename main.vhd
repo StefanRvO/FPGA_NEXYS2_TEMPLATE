@@ -40,7 +40,9 @@ component MEMORY_X_BIT is
     in_val   : in std_logic_vector(SIZE-1 downto 0);
     reset : in std_logic;
     out_val  : out std_logic_vector(SIZE-1 downto 0);
-    write    : in std_logic);
+    write    : in std_logic;
+    clk: in std_logic
+    );
 
 end component;
 
@@ -97,7 +99,7 @@ DISPLAY_LIVE(10 downto 8) <= SECONDS_10;
 DISPLAY_LIVE(14 downto 11) <= MINUTES; 
 
 --Memory to hold a counter value
-MEMORY_15_bit_1:	MEMORY_X_BIT generic map(SIZE => 15)  port map(write => not SW(1), in_val => DISPLAY,  out_val => DISPLAY_HOLD, reset => '0' );
+MEMORY_15_bit_1:	MEMORY_X_BIT generic map(SIZE => 15)  port map(write => not SW(1), in_val => DISPLAY_LIVE,  out_val => DISPLAY_HOLD, reset => '0', clk => CLOCK );
 
 with SW(1) select
 	DISPLAY <= DISPLAY_LIVE when '0',

@@ -9,19 +9,23 @@ entity MEMORY_X_BIT is
     in_val   : in std_logic_vector(SIZE-1 downto 0);
     reset : in std_logic;
     out_val  : out std_logic_vector(SIZE-1 downto 0);
-    write    : in std_logic);
+    write    : in std_logic;
+    clk: in std_logic
+    );
 
 end MEMORY_X_BIT;
 
 architecture behav of MEMORY_X_BIT is
 
 begin
-process (in_val, reset, write)
+process (clk)
 begin  -- process
-  if (reset = '1') then
-    out_val <= (others => '0');
-  elsif (write = '1' ) then
-    out_val <= in_val;
+	if clk'event and clk='1' then
+		if (reset = '1') then
+		  out_val <= (others => '0');
+		elsif (write = '1' ) then
+		  out_val <= in_val;
+		end if;
   end if;
 end process;
   
