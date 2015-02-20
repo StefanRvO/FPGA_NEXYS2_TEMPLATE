@@ -1,15 +1,17 @@
 net "BTN<0>" CLOCK_DEDICATED_ROUTE = false;
 net "BTN<0>" loc = B18;
-net "BTN<1>" CLOCK_DEDICATED_ROUTE = false;
-net "BTN<1>" loc = D18;
-net "BTN<2>" CLOCK_DEDICATED_ROUTE = false;
-net "BTN<2>" loc = E18;
-net "BTN<3>" CLOCK_DEDICATED_ROUTE = false;
-net "BTN<3>" loc = H13;
+#net "BTN<1>" CLOCK_DEDICATED_ROUTE = false;
+#net "BTN<1>" loc = D18;
+#net "BTN<2>" CLOCK_DEDICATED_ROUTE = false;
+#net "BTN<2>" loc = E18;
+#net "BTN<3>" CLOCK_DEDICATED_ROUTE = false;
+#net "BTN<3>" loc = H13;
 
-#net "SW<0>" loc = G18;
-#net "SW<1>" loc = H18;
+net "SW<0>" loc = G18;
+net "SW<1>" loc = H18;
+NET "SW<1>" CLOCK_DEDICATED_ROUTE = FALSE;
 #net "SW<2>" loc = K18;
+#NET "SW<2>" CLOCK_DEDICATED_ROUTE = FALSE;
 #net "SW<3>" loc = K17;
 #net "SW<4>" loc = L14;
 #net "SW<5>" loc = L13;

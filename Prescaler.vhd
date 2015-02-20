@@ -14,14 +14,14 @@ end Scaler;
 
 architecture behav of Scaler is
 
-	signal scaler: integer range 0 to 1000000000;
+	signal scaler: integer range 0 to SCALE / 2;
 	signal scaled: STD_LOGIC;
 	
 begin
 	process(IN_SIG)
 	begin
 		if rising_edge(IN_SIG) then
-			if(scaler = SCALE / 2) then
+			if scaler = SCALE / 2 then
 				scaler <= 0;
 				scaled <= not scaled;
 			else

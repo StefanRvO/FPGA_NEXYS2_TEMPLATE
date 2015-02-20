@@ -83,8 +83,6 @@ all: $(PROGRAM)_PROGRAM.bit
 
 $(PROGRAM).xst:
 	echo "$$XST_FILE_OPTIONS" > $(PROGRAM).xst
-	mkdir -p xst
-	mkdir -p xst/projnav.tmp
 
 $(PROGRAM).ngc: $(PROGRAM).xst
 	mkdir -p xst

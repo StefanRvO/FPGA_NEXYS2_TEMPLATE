@@ -5,23 +5,24 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity T_FlipFlop is
 	port(
-	D: IN STD_LOGIC;
-	Q,IQ: OUT STD_LOGIC
+	D, RST: IN STD_LOGIC;
+	Q: OUT STD_LOGIC
 	);
 end T_FlipFlop;
 
-architecture behav  of T_FlipFlop is
-	signal temp: STD_LOGIC;
-	
+architecture behav of T_FlipFlop is
+	signal temp: STD_LOGIC;	
 	begin
 	
-	process(D)
+	Q <= temp;
+	
+	process(D,RST)
 		begin
-		if(rising_edge(D)) then
-			temp <= '1' xor temp;
+		if D'event and D = '0' then
+			temp <= not temp;
+		end if;
+		if RST = '1' then
+			temp <= '0';
 		end if;
 	end process;
-	
-	Q <= temp;
-	IQ <= not temp;
 end behav;
