@@ -141,5 +141,5 @@ clean:
 	rm -f *.html
 	rm -f *.syr
 	rm -f *.ngr
-	rm _xmsgs -R
+	rm -f _xmsgs -R
 
