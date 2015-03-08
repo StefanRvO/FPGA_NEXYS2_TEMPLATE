@@ -10,8 +10,7 @@ port (
 	CLOCK: IN STD_LOGIC;
 	DP: OUT STD_LOGIC_VECTOR (7 downto 0);
 	AN: OUT STD_LOGIC_VECTOR (3 downto 0);
-	BTN: IN STD_LOGIC_VECTOR (0 downto 0);
-	SW: IN STD_LOGIC_VECTOR (1 downto 0);
+	BTN: IN STD_LOGIC_VECTOR (2 downto 0);
 	LD: OUT STD_LOGIC_VECTOR (7 downto 0)
 		);
 end main;
@@ -57,6 +56,14 @@ component COUNTER_X_BIT is
 			);
 end component;
 
+component Debouncer is
+	generic (THRESHOLD: integer range 0 to 500000000); --How many clock cycles the signal must remain the same for the output to switch
+	port(
+			IN_SIG: IN STD_LOGIC;
+			CLK:	IN STD_LOGIC;
+			OUT_SIG: OUT STD_LOGIC
+			);
+end component;
 	
 	signal state: STD_LOGIC_VECTOR( 1 downto 0);
 	signal DP_0: STD_LOGIC_VECTOR (7 downto 0);
@@ -74,9 +81,18 @@ end component;
 	signal DISPLAY: STD_LOGIC_VECTOR(14 downto 0);
 	signal DISPLAY_HOLD: STD_LOGIC_VECTOR(14 downto 0);
 	signal DISPLAY_LIVE: STD_LOGIC_VECTOR(14 downto 0);
+	signal Reset_Debounce: STD_LOGIC;
+	signal Hold_Debounce: STD_LOGIC;
+	signal Stop_Debounce: STD_LOGIC;
+	signal Hold_Switch: STD_LOGIC := '0';
+	signal Stop_Switch: STD_LOGIC := '0';
 begin
 
---Clock for switching the display on and of
+Debouncer_Reset: Debouncer generic map (THRESHOLD => 50000000 / 1000 * 25) port map(IN_SIG => BTN(0), CLK => CLOCK, OUT_SIG => Reset_Debounce);
+Debouncer_Hold: Debouncer generic map (THRESHOLD => 50000000 / 1000 * 25) port map(IN_SIG => BTN(1), CLK => CLOCK, OUT_SIG => Hold_Debounce);
+Debouncer_Stop: Debouncer generic map (THRESHOLD => 50000000 / 1000 * 25) port map(IN_SIG => BTN(2), CLK => CLOCK, OUT_SIG => Stop_Debounce);
+
+--Clock for switching the display on and off
 Scaler_1:	Scaler generic map(SCALE => 50000) port map( IN_SIG => CLOCK, OUT_SIG => ScaledCLK_7SEG);
 T_FlipFlop_1: T_FlipFlop port map(D => ScaledCLK_7SEG, Q=>state(1) , RST => '0');
 state(0) <= ScaledCLK_7SEG;
@@ -85,12 +101,26 @@ state(0) <= ScaledCLK_7SEG;
 Scaler_2:	Scaler generic map(SCALE => 50000000 / 2560) port map( IN_SIG => CLOCK, OUT_SIG => ScaledCLK_TIME); --Get a clock which counts 2560 times per second
 
 
-ScaledCLK_TIME_STOP <= ScaledCLK_TIME and not SW(0);
-COUNTER_256: COUNTER_X_BIT generic map( SIZE => 8) port map(MAX => "11111111", D => ScaledCLK_TIME_STOP, Q => LED_2560_PARTS, RST => BTN(0));
-COUNTER_10_1: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not LED_2560_PARTS(7), Q => SECOND_10_FRAC, RST => BTN(0));
-COUNTER_10_2: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not SECOND_10_FRAC(3), Q => SECONDS_1, RST => BTN(0));
-COUNTER_6: COUNTER_X_BIT generic map( SIZE => 3) port map(MAX => "100", D => not SECONDS_1(3), Q => SECONDS_10, RST => BTN(0));
-COUNTER_10_3: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not SECONDS_10(2), Q => MINUTES, RST => BTN(0));
+process(Stop_Debounce)
+begin
+	if rising_edge(Stop_Debounce) then
+		Stop_Switch <= not Stop_Switch;
+	end if;
+end process;
+
+process(Hold_Debounce)
+begin
+	if rising_edge(Hold_Debounce) then
+		Hold_Switch <= not Hold_Switch;
+	end if;
+end process;
+
+ScaledCLK_TIME_STOP <= ScaledCLK_TIME and not Stop_Switch;
+COUNTER_256: COUNTER_X_BIT generic map( SIZE => 8) port map(MAX => "11111111", D => ScaledCLK_TIME_STOP, Q => LED_2560_PARTS, RST => Reset_Debounce);
+COUNTER_10_1: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not LED_2560_PARTS(7), Q => SECOND_10_FRAC, RST => Reset_Debounce);
+COUNTER_10_2: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not SECOND_10_FRAC(3), Q => SECONDS_1, RST => Reset_Debounce);
+COUNTER_6: COUNTER_X_BIT generic map( SIZE => 3) port map(MAX => "100", D => not SECONDS_1(3), Q => SECONDS_10, RST => Reset_Debounce);
+COUNTER_10_3: COUNTER_X_BIT generic map( SIZE => 4) port map(MAX => "1001", D => not SECONDS_10(2), Q => MINUTES, RST => Reset_Debounce);
 LD <= LED_2560_PARTS(7 downto 0);
 
 DISPLAY_LIVE(3 downto 0) <= SECOND_10_FRAC;
@@ -99,9 +129,13 @@ DISPLAY_LIVE(10 downto 8) <= SECONDS_10;
 DISPLAY_LIVE(14 downto 11) <= MINUTES; 
 
 --Memory to hold a counter value
-MEMORY_15_bit_1:	MEMORY_X_BIT generic map(SIZE => 15)  port map(write => not SW(1), in_val => DISPLAY_LIVE,  out_val => DISPLAY_HOLD, reset => '0', clk => CLOCK );
+MEMORY_15_bit_1:	MEMORY_X_BIT generic map(SIZE => 15)  port map(write => not Hold_Switch, in_val => DISPLAY_LIVE,  out_val => DISPLAY_HOLD, reset => '0', clk => CLOCK );
 
-with SW(1) select
+
+
+
+
+with Hold_Switch select
 	DISPLAY <= DISPLAY_LIVE when '0',
 						 DISPLAY_HOLD when others;
 
