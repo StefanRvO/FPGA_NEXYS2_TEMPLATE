@@ -8,7 +8,8 @@ PROGRAM=main
 PART=xc3s500e-fg320-4
 
 
-TOOL_PATH=/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/
+TOOL_PATH_= $(shell locate Xilinx/14.7/ISE_DS/ISE/bin/lin64/xst)
+TOOL_PATH=$(TOOL_PATH_:%xst=%)
 
 XST = ${TOOL_PATH}xst
 NGDBUILD = ${TOOL_PATH}ngdbuild
