@@ -133,8 +133,6 @@ MEMORY_15_bit_1:	MEMORY_X_BIT generic map(SIZE => 15)  port map(write => not Hol
 
 
 
-
-
 with Hold_Switch select
 	DISPLAY <= DISPLAY_LIVE when '0',
 						 DISPLAY_HOLD when others;
