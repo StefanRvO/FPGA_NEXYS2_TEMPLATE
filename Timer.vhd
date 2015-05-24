@@ -11,8 +11,7 @@ port (
 	DP: OUT STD_LOGIC_VECTOR (7 downto 0);
 	AN: OUT STD_LOGIC_VECTOR (3 downto 0);
   START: IN STD_LOGIC;
-  STOP: IN STD_LOGIC;
-	LD: OUT STD_LOGIC_VECTOR (7 downto 0)
+  STOP: IN STD_LOGIC
 		);
 end Timer;
 
@@ -110,12 +109,6 @@ begin
     end if;
 end process;
 
-LD(0) <= RESET_sig;
-LD(1) <=stopped;
-LD(2) <= STOP;
-LD(3) <= START;
-
-LD(7 downto 4) <= "0000";
 
 --Clock for switching the display on and off
 Scaler_1:	Scaler generic map(SCALE => 50000) port map( IN_SIG => CLOCK, OUT_SIG => ScaledCLK_7SEG);

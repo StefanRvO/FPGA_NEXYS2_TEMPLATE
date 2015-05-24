@@ -20,9 +20,9 @@ signal tmp_Q: STD_LOGIC_VECTOR(SIZE-1 downto 0);
 begin
 
 Q <= tmp_Q;
-process (D, RST) 
+process (D, RST)
 begin
-   	if RST='1' then 
+   	if RST='1' then
     	tmp_Q <= (others => '0');
    	elsif D='1' and D'event then
    		if tmp_Q < MAX then
@@ -32,6 +32,4 @@ begin
    		end if;
    	end if;
 end process;
-
-	
 end behav;

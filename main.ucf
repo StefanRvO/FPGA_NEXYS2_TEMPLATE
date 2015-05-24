@@ -42,3 +42,39 @@ net "AN<2>" loc = C18;
 net "AN<3>" loc = F15;
 
 net "CLOCK" loc = B8;
+
+net "JA<0>" loc = L15;
+net "JA<1>" loc = K12;
+net "JA<2>" loc = L17;
+net "JA<3>" loc = M15;
+net "JA<4>" loc = K13;
+net "JA<5>" loc = L16;
+net "JA<6>" loc = M14;
+net "JA<7>" loc = M16;
+
+net "JA<8>" loc = M13;
+net "JA<9>" loc = R18;
+net "JA<10>" loc = R15;
+net "JA<11>" loc = T17;
+net "JA<12>" loc = P17;
+net "JA<13>" loc = R16;
+net "JA<14>" loc = T18;
+net "JA<15>" loc = U18;
+
+net "JA<16>" loc = G15;
+net "JA<17>" loc = J16;
+net "JA<18>" loc = G13;
+net "JA<19>" loc = H16;
+net "JA<20>" loc = H15;
+net "JA<21>" loc = F14;
+net "JA<22>" loc = G16;
+net "JA<23>" loc = J12;
+
+net "JA<24>" loc = J13;
+net "JA<25>" loc = M18;
+net "JA<26>" loc = N18;
+net "JA<27>" loc = P18;
+//net "JA<28>" loc = K14;
+//net "JA<29>" loc = K15;
+//net "JA<30>" loc = J15;
+//net "JA<31>" loc = J14;
