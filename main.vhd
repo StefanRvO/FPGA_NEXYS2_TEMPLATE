@@ -10,7 +10,7 @@ port (
 	CLOCK: IN STD_LOGIC;
 	DP: OUT STD_LOGIC_VECTOR (7 downto 0);
 	AN: OUT STD_LOGIC_VECTOR (3 downto 0);
-	BTN: IN STD_LOGIC_VECTOR (1 downto 0);
+	BTN: IN STD_LOGIC_VECTOR (0 downto 0);
 	LD: OUT STD_LOGIC_VECTOR (7 downto 0);
 	JA: IN STD_LOGIC_VECTOR (27 downto 0)
 		);

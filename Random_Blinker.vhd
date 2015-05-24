@@ -37,10 +37,10 @@ COUNTER_29_bit: COUNTER_X_BIT generic map( SIZE => 30) port map(MAX => "11111111
 process(CLOCK, NEW_BLINK)
 begin
   if NEW_BLINK = '1' then
-    LD(0) <= '0';
+    LD <= "00000000";
     TURNED_ON <= '0';
-  elsif Counter_vec(29 downto 2) = Random_vector then
-    LD(0) <= '1';
+  elsif Counter_vec(27 downto 0) = Random_vector then
+    LD <= "11111111";
     TURNED_ON <= '1';
   end if;
 end process;
@@ -52,6 +52,5 @@ end process;
     end if;
   end process;
 
-LD(7 downto 1) <= "0000000";
 
 end behav;
