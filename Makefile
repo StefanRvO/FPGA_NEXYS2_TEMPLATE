@@ -8,7 +8,7 @@ PROGRAM=main
 PART=xc3s500e-fg320-4
 BUILDDIR=bin
 LOGDIR=log
-INTSTYLE = silent
+INTSTYLE = ise
 TOOL_PATH_= $(shell locate Xilinx/14.7/ISE_DS/ISE/bin/lin64/xst)
 TOOL_PATH=$(TOOL_PATH_:%xst=%)
 

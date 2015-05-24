@@ -2,8 +2,8 @@ net "BTN<0>" CLOCK_DEDICATED_ROUTE = false;
 net "BTN<0>" loc = B18;
 net "BTN<1>" CLOCK_DEDICATED_ROUTE = false;
 net "BTN<1>" loc = D18;
-net "BTN<2>" CLOCK_DEDICATED_ROUTE = false;
-net "BTN<2>" loc = E18;
+#net "BTN<2>" CLOCK_DEDICATED_ROUTE = false;
+#net "BTN<2>" loc = E18;
 #net "BTN<3>" CLOCK_DEDICATED_ROUTE = false;
 #net "BTN<3>" loc = H13;
 

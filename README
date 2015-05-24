@@ -1,0 +1,45 @@
+Stopwatch for the Digilent Nexys 2 FPGA written in VHDL.
+Written by Stefan Ravn van Overeem.
+
+################### USAGE ########################
+
+BTN0: Reset clock.
+BTN1: Hold
+BTN2: Stop clock
+
+1/2560 seconds is shown binary on the LED's.
+
+The 7-segment display is organised like this:
+
+|-----|-----|-----|-----|
+|     |     |     |     |
+| MIN | SEC | SEC | 1/10|
+|     |     |     | SEC |
+|-----|-----|-----|-----|
+
+
+The watch is build using the following components:
+
+
+## Prescaler ##
+
+A prescaler is used to scale the clock down to 2560 Hz for the 1/2560 diplay.
+
+Another prescaler is used to scale the clock down to 1Khz for the 7-segment display.
+
+## Memory ##
+
+Memory is used to store the counter state when hold is pressed.
+
+## T Flip Flop ##
+
+Two flipflops is used as a 2 bit to switch between the 7-segment displays
+
+## Counter ##
+
+5 different counters is used to keep track of the time.
+
+## Debouncer ##
+
+3 debouncers is used to prevent debouncing from the buttons.
+
